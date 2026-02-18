@@ -6,7 +6,7 @@ participant server
     Note right of browser: The user enters text into form and clicks "Save" button.
     browser->>server: POST https://studies.cs.helsinki.fi/exampleapp/new_note
     activate server
-    Note right of server: The server accesses the data sent in the POST request, creates a new note object based off the user's text, and appends it to the notes array.
+    Note left of server: The server accesses the data sent in the POST request, creates a new note object based off the user's text, and appends it to the notes array.
     server-->>browser: HTTP Status code 302
     deactivate server
 

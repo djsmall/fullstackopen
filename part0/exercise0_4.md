@@ -3,6 +3,14 @@ sequenceDiagram
 participant browser
 participant server
 
+    Note right of browser: The user enters text into form and clicks "Save" button.
+    browser->>server: POST https://studies.cs.helsinki.fi/exampleapp/new_note
+    activate server
+    Note right of server: The server accesses the data sent in the POST request, creates a new note object based off the user's text, and appends it to the notes array.
+    server-->>browser: HTTP Status code 302
+    deactivate server
+
+    Note right of browser: The server sent back a URL redirect, which causes the browser to send another GET request.
     browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/notes
     activate server
     server-->>browser: HTML document
@@ -25,5 +33,7 @@ participant server
     server-->>browser: [{ "content": "HTML is easy", "date": "2023-1-1" }, ... ]
     deactivate server
 
-    Note right of browser: The browser executes the callback function that renders the notes
+    Note right of browser: The user recieves back the updated data.json file with their note now appearing as the last list item.
+
+
 ```

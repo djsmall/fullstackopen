@@ -1,67 +1,86 @@
 import { useState } from "react";
+import Unicafe from "./Unicafe";
+import Anecdote from "./Anecdote";
+import Total from "./Total.jsx";
+import Header from "./Header";
+import Content from "./Content";
 
-const Button = ({ onClick, text }) => {
-  return <button onClick={onClick}>{text}</button>;
-};
-
-const StatisticLine = ({ text, value }) => {
-  return (
-    <tr>
-      <td>{text}</td>
-      <td>{value}</td>
-    </tr>
-  );
-};
-
-const Statistics = ({ rating, average, positive }) => {
-  return rating.all === 0 ? (
-    <p>No feedback given</p>
-  ) : (
-    <table>
-      <tbody>
-        <StatisticLine text="good" value={rating.good} />
-        <StatisticLine text="neutral" value={rating.neutral} />
-        <StatisticLine text="bad" value={rating.bad} />
-        <StatisticLine text="all" value={rating.all} />
-        <StatisticLine text="average" value={average.toFixed(2)} />
-        <StatisticLine text="positive" value={positive.toFixed(2) + " %"} />
-      </tbody>
-    </table>
-  );
+const ExerciseContent = ({ content }) => {
+  return <div>{content}</div>;
 };
 
 const App = () => {
-  const [rating, setRating] = useState({
-    good: 0,
-    neutral: 0,
-    bad: 0,
-    all: 0,
-  });
-  const average =
-    rating.all === 0 ? 0 : (rating.good - rating.bad) / rating.all;
-  const positive = rating.all === 0 ? 0 : (rating.good / rating.all) * 100;
+  const [exercise, setExercise] = useState(
+    <div>Please select an exercise from above</div>,
+  );
+  const course = {
+    name: "Half Stack application development",
+    parts: [
+      {
+        name: "Fundamentals of React",
+        exercises: 10,
+      },
+      {
+        name: "Using props to pass data",
+        exercises: 7,
+      },
+      {
+        name: "State of a component",
+        exercises: 14,
+      },
+    ],
+  };
 
-  const handlerOnClick = (value) => {
-    const newAll = rating.all + 1;
-    const newRating = {
-      ...rating,
-      [value]: rating[value] + 1,
-      all: newAll,
-    };
-    setRating(newRating);
+  const handlerExerciseSelection = (selection) => {
+    if (selection === "Course Information") {
+      setExercise(
+        <div>
+          <Header course={course} />
+          <Content content={course} />
+          <Total total={course} />
+        </div>,
+      );
+    } else if (selection === "Unicafe") {
+      setExercise(<Unicafe />);
+    } else if (selection === "Anecdote") {
+      setExercise(<Anecdote />);
+    } else {
+      setExercise(<div>Please select an exercise from above</div>);
+    }
   };
 
   return (
     <div>
-      <h1>give feedback</h1>
-      <Button onClick={() => handlerOnClick("good")} text="good" />
-      <Button onClick={() => handlerOnClick("neutral")} text="neutral" />
-      <Button onClick={() => handlerOnClick("bad")} text="bad" />
-
-      <h1>statistics</h1>
-      <Statistics rating={rating} average={average} positive={positive} />
+      <nav>
+        <ul
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            listStyleType: "none",
+            gap: "10px",
+          }}
+        >
+          <li>
+            <button
+              onClick={() => handlerExerciseSelection("Course Information")}
+            >
+              Course Information
+            </button>
+          </li>
+          <li>
+            <button onClick={() => handlerExerciseSelection("Unicafe")}>
+              Unicafe
+            </button>
+          </li>
+          <li>
+            <button onClick={() => handlerExerciseSelection("Anecdote")}>
+              "Anecdote"
+            </button>
+          </li>
+        </ul>
+      </nav>
+      <ExerciseContent content={exercise} />
     </div>
   );
 };
-
 export default App;
